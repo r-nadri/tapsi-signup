@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ثبت نام سفیران تپسی</title>
+  
+  <!-- فونت وزیر متن -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    :root {
+      --primary-color: #0065DC;
+      --bg-color: #ffffff;
+      --input-bg: #f2f3f5;
+      --text-main: #121212;
+      --text-sub: #666666;
+      --error-color: #e53935;
+      --border-radius: 12px;
+    }
+
+    * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* محتوای اصلی فرم */
+    .form-container {
+      flex: 1;
+      padding: 24px 20px 100px 20px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .step-content { display: none; }
+    .step-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2.step-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 8px 0;
+      color: #000;
+    }
+
+    p.step-subtitle {
+      font-size: 13.5px;
+      color: var(--text-sub);
+      margin: 0 0 24px 0;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: right;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"], input[type="tel"], select {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: var(--input-bg);
+      border: 1px solid transparent;
+      border-radius: var(--border-radius);
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input[type="text"]:focus, input[type="tel"]:focus, select:focus {
+      border-color: var(--primary-color);
+      background-color: #fff;
+    }
+
+    input.input-error, select.input-error {
+      border: 1px solid var(--error-color) !important;
+      background-color: #fff8f8;
+    }
+
+    .error-text {
+      color: var(--error-color);
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+      font-weight: 600;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .radio-option input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    /* کارت‌های بارگذاری عکس و ویدیو */
+    .upload-card {
+      background-color: #f8f9fa;
+      border: 1px dashed #d1d5db;
+      border-radius: 16px;
+      padding: 32px 16px;
+      text-align: center;
+      margin-bottom: 16px;
+      position: relative;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-card img.preview {
+      max-width: 100%;
+      max-height: 140px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .btn-upload-trigger {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 101, 220, 0.2);
+    }
+
+    .delete-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: #ffffff;
+      border: 1px solid #eee;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* نوار ثابت پایین */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+      z-index: 100;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background-color: #e5e7eb;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary-color);
+      width: 14.28%;
+      transition: width 0.3s ease;
+    }
+
+    .nav-actions {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-next {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 25px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-next:disabled {
+      background-color: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-back {
+      background: none;
+      border: none;
+      color: #121212;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* مدال‌ها و پاپ‌آپ‌ها */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: #fff;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 20px 20px 0 0;
+      padding: 24px;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* مدال لودینگ در حال بارگذاری */
+    .loading-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .loading-modal.active { display: flex; }
+
+    .loading-box {
+      background: #fff;
+      padding: 24px 32px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* مدال ضبط ویدیو */
+    .video-modal-card {
+      background: #000;
+      color: #fff;
+      width: 100%;
+      max-width: 480px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .video-preview-container {
+      flex: 1;
+      position: relative;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    video.video-element {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .teleprompter-box {
+      position: absolute;
+      bottom: 120px;
+      left: 16px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 16px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.7;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .video-controls-bottom {
+      height: 100px;
+      background: #121212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      gap: 16px;
+    }
+
+    .btn-record {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-record.recording {
+      background: var(--error-color);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .btn-secondary-action {
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- فرم اصلی اسکرول‌شونده -->
+  <div class="form-container">
+    
+    <!-- گام ۱: اطلاعات شناسایی -->
+    <div class="step-content active" id="step-1">
+      <h2 class="step-title">اطلاعات شناسایی سفیر</h2>
+      <p class="step-subtitle">مشخصات فردی خود را وارد کنید.</p>
+
+      <div class="form-group">
+        <label>نام</label>
+        <input type="text" id="firstName" placeholder="نام" oninput="validatePersianInput(this, 'firstNameError')">
+        <div class="error-text" id="firstNameError">با حروف فارسی تایپ کنید</div>
+      </div>
+
+      <div class="form-group">
+        <label>نام خانوادگی</label>
+        <input type="text" id="lastName" placeholder="نام خانوادگی" oninput="validatePersianInput(this, 'lastNameError')">
+        <div class="error-text" id="lastNameError">با حروف فارسی تایپ کنید</div>
+      </div>
+
+      <div class="form-group">
+        <label>شماره شناسنامه / کد ملی</label>
+        <input type="tel" id="nationalId" placeholder="شماره شناسنامه" oninput="validateNumberInput(this, 'nationalIdError')">
+        <div class="error-text" id="nationalIdError">فقط از اعداد استفاده کنید</div>
+      </div>
+
+      <div class="form-group">
+        <label>نام پدر</label>
+        <input type="text" id="fatherName" placeholder="نام پدر" oninput="validatePersianInput(this, 'fatherNameError')">
+        <div class="error-text" id="fatherNameError">با حروف فارسی تایپ کنید</div>
+      </div>
+
+      <div class="form-group">
+        <label>جنسیت</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="gender" value="مرد" checked> مرد
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="gender" value="زن"> زن
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- گام ۲: اطلاعات محل فعالیت -->
+    <div class="step-content" id="step-2">
+      <h2 class="step-title">اطلاعات محل فعالیت</h2>
+      <p class="step-subtitle">شهر محل فعالیت را انتخاب کنید.</p>
+
+      <div class="form-group">
+        <label>شهر محل فعالیت</label>
+        <select id="citySelect" onchange="handleCityChange()">
+          <option value="">انتخاب شهر...</option>
+          <option value="تهران">تهران</option>
+          <option value="کرج">کرج</option>
+          <option value="مشهد">مشهد</option>
+          <option value="اصفهان">اصفهان</option>
+          <option value="شیراز">شیراز</option>
+          <option value="قم">قم</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="zoneGroup" style="display: none;">
+        <label>منطقه محل فعالیت</label>
+        <select id="zoneSelect" onchange="validateStep2()">
+          <option value="">انتخاب منطقه...</option>
+          <!-- مناطق ۲۲گانه با JS پر می‌شوند -->
+        </select>
+      </div>
+    </div>
+
+    <!-- گام ۳: نوع کاربری -->
+    <div class="step-content" id="step-3">
+      <h2 class="step-title">نوع کاربری</h2>
+      <p class="step-subtitle">نوع کاربری خود را انتخاب کنید.</p>
+
+      <div class="radio-group" style="flex-direction: column; align-items: flex-start; gap: 16px;">
+        <label class="radio-option">
+          <input type="radio" name="usageType" value="passenger" onchange="handleUsageChange(this)">
+          کاربری بسته + مسافر
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="usageType" value="package" checked onchange="handleUsageChange(this)">
+          کاربری بسته
+        </label>
+      </div>
+    </div>
+
+    <!-- گام ۴: آپلود گواهی‌نامه -->
+    <div class="step-content" id="step-4">
+      <h2 class="step-title">آپلود گواهی‌نامه</h2>
+      <p class="step-subtitle">گواهی‌نامه معتبر خود را بارگذاری کنید. دقت داشته باشید که تصویر واضح و بدون اسکن باشد.</p>
+
+      <div class="upload-card" id="card-license-front">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2m-2 4h2M7 16h10"/></svg>
+        <button class="btn-upload-trigger" onclick="openPicker('license-front', 'environment')">تصویر روی گواهی‌نامه</button>
+      </div>
+
+      <div class="upload-card" id="card-license-back">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2m-2 4h2M7 16h10"/></svg>
+        <button class="btn-upload-trigger" onclick="openPicker('license-back', 'environment')">تصویر پشت گواهی‌نامه</button>
+      </div>
+    </div>
+
+    <!-- گام ۵: آپلود مدرک موتور -->
+    <div class="step-content" id="step-5">
+      <h2 class="step-title">آپلود مدرک موتور</h2>
+      <p class="step-subtitle">یکی از مدارک زیر را انتخاب و بارگذاری نمایید. دقت داشته باشید تصویر باید واضح و بدون اسکن باشد.</p>
+
+      <div class="radio-group" style="margin-bottom: 20px;">
+        <label class="radio-option">
+          <input type="radio" name="motorDocType" value="card" checked onchange="toggleMotorDocType()"> کارت موتور
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="motorDocType" value="paper" onchange="toggleMotorDocType()"> برگه سبز یا قولنامه
+        </label>
+      </div>
+
+      <div class="upload-card" id="card-motor-front">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2m-2 4h2M7 16h10"/></svg>
+        <button class="btn-upload-trigger" id="btn-motor-front" onclick="openPicker('motor-front', 'environment')">تصویر روی کارت موتور</button>
+      </div>
+
+      <div class="upload-card" id="card-motor-back">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2m-2 4h2M7 16h10"/></svg>
+        <button class="btn-upload-trigger" id="btn-motor-back" onclick="openPicker('motor-back', 'environment')">تصویر پشت کارت موتور</button>
+      </div>
+    </div>
+
+    <!-- گام ۶: تصویر پروفایل -->
+    <div class="step-content" id="step-6">
+      <h2 class="step-title">تصویر پروفایل</h2>
+      <p class="step-subtitle">عکس را به صورت تمام رخ (از روبه‌رو) از سفیر بگیرید و ترجیحاً پس‌زمینه عکس سفید یا ساده و بدون کلاه، عینک و سایر زیورآلات باشد.</p>
+
+      <div class="upload-card" id="card-profile">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        <button class="btn-upload-trigger" onclick="openPicker('profile', 'user')">تصویر پروفایل</button>
+      </div>
+    </div>
+
+    <!-- گام ۷: ویدئو احراز هویت -->
+    <div class="step-content" id="step-7">
+      <h2 class="step-title">ویدئو احراز هویت</h2>
+      <p class="step-subtitle">ویدئو را به صورت تمام رخ (از روبه‌رو) از سفیر بگیرید و از او بخواهید متن زیر را به صورت واضح و رسا و روبه دوربین بیان کند:</p>
+
+      <div class="upload-card" id="card-video-step">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        <button class="btn-upload-trigger" id="recordVideoCardBtn" onclick="openVideoRecorderModal()">ضبط ویدئو احراز هویت</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- نوار کنترل چسبیده به پایین -->
+  <div class="bottom-nav">
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-back" id="backBtn" onclick="prevStep()" style="visibility: hidden;">
+        بازگشت &rarr;
+      </button>
+      <button class="btn-next" id="nextBtn" onclick="handleNextStepAction()" disabled>
+        مرحله بعد &larr;
+      </button>
+    </div>
+  </div>
+
+  <!-- مدال لودینگ ارسال به سرور -->
+  <div class="loading-modal" id="loadingModal">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <span style="font-weight:700; font-size:15px; color:#333;">در حال بارگذاری ...</span>
+    </div>
+  </div>
+
+  <!-- پاپ‌آپ هشدار مسافر -->
+  <div class="modal-overlay" id="passengerModal">
+    <div class="modal-card">
+      <div style="font-size:18px; font-weight:800; margin-bottom:12px;">توجه کنید</div>
+      <p style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">سفیر گرامی جهت جابجایی مسافر باید موارد زیر را داشته باشید:</p>
+      <ul style="text-align:right; font-size:14px; line-height:1.8; color:#374151; padding-right:20px;">
+        <li>گواهی‌نامه معتبر داشته باشید (تاریخ انقضا تمام نشده باشد)</li>
+        <li>بیمه نامه معتبر داشته باشید</li>
+      </ul>
+      <button style="background:var(--primary-color); color:#fff; border:none; width:100%; padding:12px; border-radius:12px; font-weight:700; margin-top:16px; cursor:pointer;" onclick="closeModal('passengerModal')">متوجه شدم</button>
+    </div>
+  </div>
+
+  <!-- پاپ‌آپ انتخاب منبع عکس -->
+  <div class="modal-overlay" id="pickerModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <span style="font-weight:800; font-size:16px;">بارگذاری تصویر</span>
+        <span style="cursor:pointer; font-weight:bold; font-size:18px;" onclick="closeModal('pickerModal')">✕</span>
+      </div>
+      <button style="background:#f2f3f5; color:#000; border:none; width:100%; padding:14px; border-radius:12px; font-weight:700; margin-bottom:10px; text-align:right; cursor:pointer;" onclick="triggerFileInput('camera')">
+        📷 گرفتن عکس با دوربین
+      </button>
+      <button style="background:#f2f3f5; color:#000; border:none; width:100%; padding:14px; border-radius:12px; font-weight:700; text-align:right; cursor:pointer;" onclick="triggerFileInput('gallery')">
+        🖼 انتخاب از گالری
+      </button>
+    </div>
+  </div>
+
+  <!-- مدال اختصاصی ضبط ویدیو -->
+  <div class="modal-overlay" id="videoRecorderOverlay" style="align-items:center;">
+    <div class="video-modal-card">
+      <div class="video-preview-container">
+        <video id="videoStreamElement" class="video-element" autoplay muted playsinline></video>
+        <video id="videoPlaybackElement" class="video-element" controls style="display:none;"></video>
+        
+        <div class="teleprompter-box" id="teleprompterText">
+          من [نام و نام خانوادگی] هستم و میخواهم به عنوان راننده در تپسی فعالیت کنم و تمامی قوانین را قبول دارم.
+        </div>
+      </div>
+
+      <div class="video-controls-bottom" id="videoControlsDefault">
+        <button class="btn-record" id="recordToggleBtn" onclick="toggleVideoRecording()">ضبط ویدیو</button>
+      </div>
+
+      <div class="video-controls-bottom" id="videoControlsPreview" style="display:none;">
+        <button class="btn-secondary-action" onclick="resetVideoRecording()">
+          <span>🔄</span> ضبط مجدد
+        </button>
+        <button class="btn-record" onclick="confirmVideoRecording()">ارسال ویدیو</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- اینپوت‌های مخفی عکس -->
+  <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="handleFileSelect(this)">
+  <input type="file" id="galleryInput" accept="image/*" style="display:none;" onchange="handleFileSelect(this)">
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzzxM_1QNL9v4WpnieI8tU5qorvSN_-mGcHdUlnkXP2W6AFZe6AeHs3BNhL6l_tcAX5/exec";
+
+    let currentStep = 1;
+    const totalSteps = 7;
+    let activeUploadKey = '';
+    let currentCameraFacing = 'environment';
+
+    const uploadedImages = {
+      'license-front': null,
+      'license-back': null,
+      'motor-front': null,
+      'motor-back': null,
+      'profile': null
+    };
+
+    let recordedVideoBlob = null;
+    let mediaRecorder = null;
+    let videoStream = null;
+    let recordedChunks = [];
+    let isRecording = false;
+
+    // پر کردن مناطق ۲۲‌گانه
+    (function initTehranZones() {
+      const zoneSelect = document.getElementById('zoneSelect');
+      for (let i = 1; i <= 22; i++) {
+        const opt = document.createElement('option');
+        opt.value = `منطقه ${i}`;
+        opt.innerText = `منطقه ${i}`;
+        zoneSelect.appendChild(opt);
+      }
+    })();
+
+    // اعتبارسنجی حروف فارسی
+    function validatePersianInput(input, errorId) {
+      const persianRegex = /^[\u0600-\u06FF\s]+$/;
+      const errorEl = document.getElementById(errorId);
+      if (input.value && !persianRegex.test(input.value)) {
+        input.classList.add('input-error');
+        errorEl.style.display = 'block';
+      } else {
+        input.classList.remove('input-error');
+        errorEl.style.display = 'none';
+      }
+      validateCurrentStep();
+    }
+
+    // اعتبارسنجی اعداد انگلیسی
+    function validateNumberInput(input, errorId) {
+      const numberRegex = /^[0-9]+$/;
+      const errorEl = document.getElementById(errorId);
+      if (input.value && !numberRegex.test(input.value)) {
+        input.classList.add('input-error');
+        errorEl.style.display = 'block';
+      } else {
+        input.classList.remove('input-error');
+        errorEl.style.display = 'none';
+      }
+      validateCurrentStep();
+    }
+
+    // کنترل تغییر شهر
+    function handleCityChange() {
+      const city = document.getElementById('citySelect').value;
+      const zoneGroup = document.getElementById('zoneGroup');
+      if (city === 'تهران') {
+        zoneGroup.style.display = 'block';
+      } else {
+        zoneGroup.style.display = 'none';
+        document.getElementById('zoneSelect').value = '';
+      }
+      validateStep2();
+    }
+
+    function validateStep1() {
+      const fName = document.getElementById('firstName').value.trim();
+      const lName = document.getElementById('lastName').value.trim();
+      const nId = document.getElementById('nationalId').value.trim();
+      const father = document.getElementById('fatherName').value.trim();
+
+      const persianRegex = /^[\u0600-\u06FF\s]+$/;
+      const numberRegex = /^[0-9]+$/;
+
+      const isValid = fName && persianRegex.test(fName) &&
+                      lName && persianRegex.test(lName) &&
+                      nId && numberRegex.test(nId) &&
+                      father && persianRegex.test(father);
+
+      document.getElementById('nextBtn').disabled = !isValid;
+    }
+
+    function validateStep2() {
+      const city = document.getElementById('citySelect').value;
+      const zone = document.getElementById('zoneSelect').value;
+      if (city === 'تهران') {
+        document.getElementById('nextBtn').disabled = !(city && zone);
+      } else {
+        document.getElementById('nextBtn').disabled = !city;
+      }
+    }
+
+    function validateCurrentStep() {
+      if (currentStep === 1) validateStep1();
+      else if (currentStep === 2) validateStep2();
+      else if (currentStep === 3) document.getElementById('nextBtn').disabled = false;
+      else if (currentStep === 4) {
+        document.getElementById('nextBtn').disabled = !(uploadedImages['license-front'] && uploadedImages['license-back']);
+      } else if (currentStep === 5) {
+        document.getElementById('nextBtn').disabled = !(uploadedImages['motor-front'] && uploadedImages['motor-back']);
+      } else if (currentStep === 6) {
+        document.getElementById('nextBtn').disabled = !uploadedImages['profile'];
+      } else if (currentStep === 7) {
+        document.getElementById('nextBtn').disabled = !recordedVideoBlob;
+      }
+    }
+
+    // تغییر مرحله و آپدیت UI
+    function updateStepUI() {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(`step-${currentStep}`).classList.add('active');
+
+      const progressPercent = (currentStep / totalSteps) * 100;
+      document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+      document.getElementById('backBtn').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+
+      const nextBtn = document.getElementById('nextBtn');
+      if (currentStep === totalSteps) {
+        nextBtn.innerHTML = 'ثبت نهایی و تکمیل ✓';
+      } else {
+        nextBtn.innerHTML = 'مرحله بعد &larr;';
+      }
+
+      validateCurrentStep();
+      window.scrollTo(0, 0);
+    }
+
+    // ارسال داده مرحله فعلی به سرور
+    async function handleNextStepAction() {
+      showLoading(true);
+
+      const payload = {
+        action: 'saveStep',
+        step: currentStep,
+        nationalId: document.getElementById('nationalId').value || 'GUEST',
+        data: getStepData(currentStep)
+      };
+
+      try {
+        await fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        showLoading(false);
+
+        if (currentStep < totalSteps) {
+          currentStep++;
+          updateStepUI();
+        } else {
+          alert("ثبت نام شما با موفقیت تکمیل شد!");
+          location.reload();
+        }
+      } catch (err) {
+        showLoading(false);
+        console.error(err);
+        alert("خطا در ارتباط با سرور. دوباره تلاش کنید.");
+      }
+    }
+
+    function getStepData(step) {
+      if (step === 1) {
+        return {
+          firstName: document.getElementById('firstName').value,
+          lastName: document.getElementById('lastName').value,
+          nationalId: document.getElementById('nationalId').value,
+          fatherName: document.getElementById('fatherName').value,
+          gender: document.querySelector('input[name="gender"]:checked').value
+        };
+      } else if (step === 2) {
+        return {
+          city: document.getElementById('citySelect').value,
+          zone: document.getElementById('zoneSelect').value
+        };
+      } else if (step === 3) {
+        return { usageType: document.querySelector('input[name="usageType"]:checked').value };
+      } else if (step === 4) {
+        return { licenseFront: uploadedImages['license-front'], licenseBack: uploadedImages['license-back'] };
+      } else if (step === 5) {
+        return {
+          motorDocType: document.querySelector('input[name="motorDocType"]:checked').value,
+          motorFront: uploadedImages['motor-front'],
+          motorBack: uploadedImages['motor-back']
+        };
+      } else if (step === 6) {
+        return { profileImage: uploadedImages['profile'] };
+      } else if (step === 7) {
+        return { videoBlob: videoBase64Data };
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepUI();
+      }
+    }
+
+    function showLoading(show) {
+      const el = document.getElementById('loadingModal');
+      if (show) el.classList.add('active');
+      else el.classList.remove('active');
+    }
+
+    function handleUsageChange(radio) {
+      if (radio.value === 'passenger') {
+        document.getElementById('passengerModal').classList.add('active');
+      }
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function toggleMotorDocType() {
+      const isPaper = document.querySelector('input[name="motorDocType"]:checked').value === 'paper';
+      document.getElementById('btn-motor-front').innerText = isPaper ? 'تصویر روی برگه سبز' : 'تصویر روی کارت موتور';
+      document.getElementById('btn-motor-back').innerText = isPaper ? 'تصویر پشت برگه سبز' : 'تصویر پشت کارت موتور';
+    }
+
+    // مدیریت عکس گرفتن
+    function openPicker(key, facing) {
+      activeUploadKey = key;
+      currentCameraFacing = facing;
+      document.getElementById('pickerModal').classList.add('active');
+    }
+
+    function triggerFileInput(type) {
+      closeModal('pickerModal');
+      const camInput = document.getElementById('cameraInput');
+      camInput.setAttribute('capture', currentCameraFacing);
+      
+      if (type === 'camera') camInput.click();
+      else document.getElementById('galleryInput').click();
+    }
+
+    function handleFileSelect(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          const base64Str = e.target.result;
+          uploadedImages[activeUploadKey] = base64Str;
+          renderImagePreview(activeUploadKey, base64Str);
+          validateCurrentStep();
+        };
+
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function renderImagePreview(key, src) {
+      const card = document.getElementById(`card-${key}`);
+      card.innerHTML = `
+        <img src="${src}" class="preview">
+        <button class="delete-btn" onclick="removeImage('${key}')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      `;
+    }
+
+    function removeImage(key) {
+      uploadedImages[key] = null;
+      let btnText = 'انتخاب تصویر';
+      let facing = 'environment';
+
+      if (key === 'license-front') btnText = 'تصویر روی گواهی‌نامه';
+      if (key === 'license-back') btnText = 'تصویر پشت گواهی‌نامه';
+      if (key === 'motor-front') btnText = document.querySelector('input[name="motorDocType"]:checked').value === 'paper' ? 'تصویر روی برگه سبز' : 'تصویر روی کارت موتور';
+      if (key === 'motor-back') btnText = document.querySelector('input[name="motorDocType"]:checked').value === 'paper' ? 'تصویر پشت برگه سبز' : 'تصویر پشت کارت موتور';
+      if (key === 'profile') { btnText = 'تصویر پروفایل'; facing = 'user'; }
+
+      const card = document.getElementById(`card-${key}`);
+      card.innerHTML = `
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2m-2 4h2M7 16h10"/></svg>
+        <button class="btn-upload-trigger" id="btn-${key}" onclick="openPicker('${key}', '${facing}')">${btnText}</button>
+      `;
+      validateCurrentStep();
+    }
+
+    // بخش ضبط ویدیو
+    let videoBase64Data = null;
+
+    async function openVideoRecorderModal() {
+      const fName = document.getElementById('firstName').value || '';
+      const lName = document.getElementById('lastName').value || '';
+      const fullName = `${fName} ${lName}`.trim() || '[نام و نام خانوادگی]';
+
+      document.getElementById('teleprompterText').innerText = 
+        `من ${fullName} هستم و میخواهم به عنوان راننده در تپسی فعالیت کنم و تمامی قوانین را قبول دارم.`;
+
+      document.getElementById('videoRecorderOverlay').classList.add('active');
+      document.getElementById('videoStreamElement').style.display = 'block';
+      document.getElementById('videoPlaybackElement').style.display = 'none';
+      document.getElementById('videoControlsDefault').style.display = 'flex';
+      document.getElementById('videoControlsPreview').style.display = 'none';
+
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: true
+        });
+        document.getElementById('videoStreamElement').srcObject = videoStream;
+      } catch (err) {
+        alert("خطا در دسترسی به دوربین جلو: " + err.message);
+        closeVideoRecorderModal();
+      }
+    }
+
+    function toggleVideoRecording() {
+      const btn = document.getElementById('recordToggleBtn');
+      if (!isRecording) {
+        // شروع ضبط
+        recordedChunks = [];
+        let options = { mimeType: 'video/webm' };
+        if (MediaRecorder.isTypeSupported('video/mp4')) options = { mimeType: 'video/mp4' };
+
+        mediaRecorder = new MediaRecorder(videoStream, options);
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+        mediaRecorder.onstop = handleVideoStop;
+
+        mediaRecorder.start(1000);
+        isRecording = true;
+        btn.innerText = "پایان ضبط";
+        btn.classList.add('recording');
+      } else {
+        // پایان ضبط
+        mediaRecorder.stop();
+        isRecording = false;
+        btn.classList.remove('recording');
+      }
+    }
+
+    function handleVideoStop() {
+      const mimeType = mediaRecorder.mimeType || 'video/webm';
+      recordedVideoBlob = new Blob(recordedChunks, { type: mimeType });
+
+      // نمایش پیش‌نمایش
+      const videoURL = URL.createObjectURL(recordedVideoBlob);
+      const playbackEl = document.getElementById('videoPlaybackElement');
+      playbackEl.src = videoURL;
+
+      document.getElementById('videoStreamElement').style.display = 'none';
+      playbackEl.style.display = 'block';
+
+      document.getElementById('videoControlsDefault').style.display = 'none';
+      document.getElementById('videoControlsPreview').style.display = 'flex';
+
+      // تبدیل به Base64
+      const reader = new FileReader();
+      reader.onloadend = () => { videoBase64Data = reader.result; };
+      reader.readAsDataURL(recordedVideoBlob);
+    }
+
+    function resetVideoRecording() {
+      recordedVideoBlob = null;
+      videoBase64Data = null;
+
+      document.getElementById('videoStreamElement').style.display = 'block';
+      document.getElementById('videoPlaybackElement').style.display = 'none';
+
+      document.getElementById('videoControlsDefault').style.display = 'flex';
+      document.getElementById('videoControlsPreview').style.display = 'none';
+
+      document.getElementById('recordToggleBtn').innerText = "ضبط ویدیو";
+    }
+
+    function confirmVideoRecording() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+      document.getElementById('videoRecorderOverlay').classList.remove('active');
+
+      // آپدیت UI کارت ویدیو
+      const card = document.getElementById('card-video-step');
+      card.innerHTML = `
+        <div style="font-weight:700; color:#0065DC; font-size:15px; margin-bottom:8px;">✓ ویدئو احراز هویت ضبط شد</div>
+        <button class="btn-upload-trigger" onclick="openVideoRecorderModal()">ضبط مجدد ویدئو</button>
+      `;
+      validateCurrentStep();
+    }
+
+    function closeVideoRecorderModal() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+      document.getElementById('videoRecorderOverlay').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
